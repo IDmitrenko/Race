@@ -2,14 +2,16 @@ package ru.geekbrains;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
-
-import static ru.geekbrains.MainClass.isWinner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
     static {
         CARS_COUNT = 0;
     }
+    private static boolean isWinner = false;
+    private static Lock lock = new ReentrantLock();
     private Race race;
     private int speed;
     private CyclicBarrier cb;
@@ -21,7 +23,8 @@ public class Car implements Runnable {
     public int getSpeed() {
         return speed;
     }
-    public Car(Race race, int speed, CyclicBarrier cb, CountDownLatch cdl) {
+
+    protected Car(Race race, int speed, CyclicBarrier cb, CountDownLatch cdl) {
         this.race = race;
         this.speed = speed;
         this.cb = cb;
@@ -49,6 +52,21 @@ public class Car implements Runnable {
 
     }
 
+    private boolean isWinner() {
+        if (!isWinner) {
+            try {
+                lock.lock();
+                isWinner = true;
+            } finally {
+                lock.unlock();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+/* второй вариант реализации
     private synchronized boolean isWinner() {
         if (!isWinner) {
             isWinner = true;
@@ -57,5 +75,6 @@ public class Car implements Runnable {
             return false;
         }
     }
+*/
 
 }

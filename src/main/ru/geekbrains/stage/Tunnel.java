@@ -4,13 +4,16 @@ import ru.geekbrains.Car;
 
 import java.util.concurrent.Semaphore;
 
+import static ru.geekbrains.MainClass.CARS_COUNT;
+
 public class Tunnel extends Stage {
-    private Semaphore smp;
-    public Tunnel(Semaphore smp) {
-        this.smp = smp;
+    private Semaphore smp = new Semaphore(CARS_COUNT / 2);
+
+    public Tunnel() {
         this.length = 80;
         this.description = "Тоннель " + length + " метров";
     }
+
     @Override
     public void go(Car c) {
         try {

@@ -4,6 +4,7 @@ import ru.geekbrains.stage.Road;
 import ru.geekbrains.stage.Tunnel;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /*
  1. Все участники должны стартовать одновременно, несмотря на разное время  подготовки.
@@ -18,6 +19,7 @@ public class MainClass {
 
     public static final int CARS_COUNT = 4;
     private static ExecutorService executorService = Executors.newFixedThreadPool(CARS_COUNT);
+    public static final AtomicInteger finishCount = new AtomicInteger(0);
 
     public static void main(String[] args) {
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
@@ -29,7 +31,7 @@ public class MainClass {
         Race race = new Race(new Road(60), new Tunnel(), new Road(40));
         Car[] cars = new Car[CARS_COUNT];
         for (int i = 0; i < cars.length; i++) {
-            cars[i] = new Car(race, 20 + (int) (Math.random() * 10), cb, cdl);
+            cars[i] = new Car(race, 20 + (int) (Math.random() * 10), cb, cdl, finishCount);
         }
 
         for (int i = 0; i < cars.length; i++) {
